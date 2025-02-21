@@ -1,18 +1,49 @@
-<style>
-  .video-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  iframe {
-    width: 960px;
-    height: 540px;
-  }
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newsroom Video Wall</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        body {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2x2 grid, adjust for more */
+            grid-gap: 10px;
+            background: black;
+            padding: 10px;
+        }
+        video {
+            width: 100%;
+            height: auto;
+            background: black;
+        }
+    </style>
+</head>
+<body>
+    <video id="video1" controls autoplay></video>
+    <video id="video2" controls autoplay></video>
+    <video id="video3" controls autoplay></video>
+    <video id="video4" controls autoplay></video>
 
-<div class="video-container">
-  <iframe src="https://www.hlsplayer.net/embed?type=m3u8&src=https://bloomberg-bloomberg-3-br.samsung.wurl.tv/manifest/playlist.m3u8" width="960" height="540"></iframe>
-  <iframe src="https://www.hlsplayer.net/embed?type=m3u8&src=https://cbcrclinear-tor.akamaized.net/hls/live/2042769/geo_allow_ca/CBCRCLINEAR_TOR_15/master5.m3u8" width="960" height="540"></iframe>
-  <iframe src="https://www.hlsplayer.net/embed?type=m3u8&src=https://vs-hls-push-ww-live.akamaized.net/x=4/i=urn:bbc:pips:service:bbc_news_channel_hd/t=3840/v=pv14/b=5070016/main.m3u8" width="960" height="540"></iframe>
-  <iframe src="https://www.hlsplayer.net/embed?type=m3u8&src=https://content.uplynk.com/channel/3324f2467c414329b3b0cc5cd987b6be.m3u8" width="960" height="540"></iframe>
-</div>
+    <script>
+        const streams = [
+            "https://bloomberg-bloomberg-3-br.samsung.wurl.tv/manifest/playlist.m3u8",
+            "https://cbcrclinear-tor.akamaized.net/hls/live/2042769/geo_allow_ca/CBCRCLINEAR_TOR_15/master5.m3u8",
+            "https://vs-hls-push-ww-live.akamaized.net/x=4/i=urn:bbc:pips:service:bbc_news_channel_hd/t=3840/v=pv14/b=5070016/main.m3u8",
+            "https://content.uplynk.com/channel/3324f2467c414329b3b0cc5cd987b6be.m3u8"
+        ];
+
+        streams.forEach((url, index) => {
+            const video = document.getElementById(`video${index + 1}`);
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(url);
+                hls.attachMedia(video);
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = url;
+            }
+        });
+    </script>
+</body>
+</html>
